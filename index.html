@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 บอกรัก</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #1a0a2e;
+    color: #fff;
+    font-family: 'Sarabun', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Stars background */
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+
+  /* Floating hearts */
+  .hearts-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .heart-float {
+    position: absolute;
+    bottom: -60px;
+    font-size: var(--s);
+    animation: floatUp var(--d) linear infinite;
+    opacity: 0.15;
+    left: var(--x);
+    animation-delay: var(--delay);
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Screens */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    padding: 40px 20px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+  .screen.active { display: flex; }
+
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 500px;
+    width: 100%;
+    backdrop-filter: blur(12px);
+    animation: fadeIn 0.8s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .big-heart {
+    font-size: 72px;
+    animation: pulse 1.5s ease-in-out infinite;
+    display: block;
+    margin-bottom: 24px;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #ff9de2, #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: #ffb3de;
+  }
+
+  p {
+    color: rgba(255,255,255,0.75);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+    margin: 8px;
+    text-decoration: none;
+  }
+  .btn-love {
+    background: linear-gradient(135deg, #ff6eb4, #ff3e7c);
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(255, 62, 124, 0.45);
+  }
+  .btn-love:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,62,124,0.6); }
+
+  .btn-yes {
+    background: linear-gradient(135deg, #ff6eb4, #e040fb);
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(224, 64, 251, 0.45);
+  }
+  .btn-yes:hover { transform: translateY(-3px); }
+
+  .btn-no {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: #ff9de2;
+    border: 1.5px solid #ff9de2;
+  }
+  .btn-outline:hover { background: rgba(255,157,226,0.1); transform: translateY(-2px); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.45);
+  }
+  .btn-primary:hover { transform: translateY(-3px); }
+
+  /* Inputs & selects */
+  input[type="text"], select, input[type="date"] {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.07);
+    color: #fff;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input:focus, select:focus { border-color: #ff9de2; }
+  select option { background: #2d1254; color: #fff; }
+  input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.5); }
+
+  /* Choice grid */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .choice-item {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .choice-item:hover { border-color: #ff9de2; background: rgba(255,157,226,0.1); }
+  .choice-item.selected {
+    border-color: #e040fb;
+    background: rgba(224, 64, 251, 0.2);
+    box-shadow: 0 0 20px rgba(224,64,251,0.25);
+  }
+  .choice-item .emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+
+  /* Final screen */
+  #screen-final {
+    background: radial-gradient(ellipse at center, #3d0060 0%, #1a0a2e 100%);
+  }
+
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    z-index: 10;
+    pointer-events: none;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  .final-msg {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #ff9de2, #ffb347, #e040fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 20px 0;
+  }
+
+  .summary-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 24px;
+    margin: 20px 0;
+    text-align: left;
+  }
+  .summary-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    align-items: flex-start;
+  }
+  .summary-row span:first-child { opacity: 0.5; min-width: 90px; }
+  .summary-row span:last-child { color: #ffb3de; font-weight: 600; }
+
+  .note-warn {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #ffb347;
+    margin-top: 16px;
+  }
+
+  /* Not-love screen */
+  #screen-notlove .card { border-color: rgba(255,180,100,0.3); }
+
+  /* Progress dots */
+  .progress {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.3s;
+  }
+  .dot.done { background: #e040fb; }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+<!-- Floating hearts bg -->
+<div class="hearts-bg" id="heartsContainer"></div>
+
+<!-- ===== SCREEN 1: Confession ===== -->
+<div class="screen active" id="screen-confession">
+  <div class="card">
+    <span class="big-heart">💌</span>
+    <h1>มีบางอย่างอยากบอก...</h1>
+    <p>
+      เธอรู้มั้ยว่าทุกครั้งที่เห็นยิ้มของเธอ<br>
+      ฉันรู้สึกว่าโลกนี้มันดีขึ้นทันทีเลย<br><br>
+      <strong style="color:#ffb3de">ฉันรักเธอ</strong> &mdash; ด้วยหัวใจทั้งหมด 🤍
+    </p>
+    <p style="margin-bottom:32px">แล้วเธอล่ะ... รู้สึกยังไงกับฉันบ้าง?</p>
+    <div>
+      <button class="btn btn-yes" onclick="showScreen('screen-yes')">❤️ รักเหมือนกัน!</button>
+      <button class="btn btn-no" id="btnNo" onclick="runAway(this)">💔 ไม่รัก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2a: Yes! ===== -->
+<div class="screen" id="screen-yes">
+  <div class="card">
+    <span class="big-heart">🥰</span>
+    <h1>ดีใจมากเลย!</h1>
+    <p>เย้~ เธอรักฉันด้วย! ฉันดีใจมากเลยนะ 🌸<br>งั้นเราไปเดตกันได้เลย!</p>
+    <button class="btn btn-love" onclick="showScreen('screen-place')">✨ นัดเดตกันเถอะ!</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2b: Not love ===== -->
+<div class="screen" id="screen-notlove">
+  <div class="card">
+    <span class="big-heart">😢</span>
+    <h2>โอเค... ฉันเข้าใจ</h2>
+    <p>แม้เธอจะไม่รัก แต่ฉันก็ยังอยากให้เธอมีความสุขนะ 💛<br>ขอบคุณที่ตอบตรง ๆ</p>
+    <button class="btn btn-outline" onclick="showScreen('screen-confession')">← กลับไปลองใหม่</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: Choose Place ===== -->
+<div class="screen" id="screen-place">
+  <div class="card">
+    <div class="progress">
+      <div class="dot done"></div><div class="dot done"></div>
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <h2>🗺️ อยากไปที่ไหนกัน?</h2>
+    <p>เลือกสถานที่ที่อยากไปด้วยกันนะ</p>
+    <div class="choice-grid" id="placeGrid">
+      <div class="choice-item" onclick="selectChoice('place', this, 'ร้านอาหารโรแมนติก 🍷')">
+        <span class="emoji">🍷</span>ร้านอาหารโรแมนติก
+      </div>
+      <div class="choice-item" onclick="selectChoice('place', this, 'คาเฟ่น่ารัก ☕')">
+        <span class="emoji">☕</span>คาเฟ่น่ารัก
+      </div>
+      <div class="choice-item" onclick="selectChoice('place', this, 'สวนสาธารณะ 🌸')">
+        <span class="emoji">🌸</span>สวนสาธารณะ
+      </div>
+      <div class="choice-item" onclick="selectChoice('place', this, 'ร้านหมูกระทะ 🍖')">
+        <span class="emoji">🍖</span>ร้านหมูกระทะ
+      </div>
+      <div class="choice-item" onclick="selectChoice('place', this, 'ดูหนังในโรงภาพยนตร์ 🎬')">
+        <span class="emoji">🎬</span>ดูหนัง
+      </div>
+      <div class="choice-item" onclick="selectChoice('place', this, 'ตลาดนัดยามค่ำ 🏮')">
+        <span class="emoji">🏮</span>ตลาดนัดยามค่ำ
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btnNextPlace" onclick="nextFromPlace()" style="opacity:0.4;pointer-events:none">ถัดไป →</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: Choose Activity ===== -->
+<div class="screen" id="screen-activity">
+  <div class="card">
+    <div class="progress">
+      <div class="dot done"></div><div class="dot done"></div>
+      <div class="dot done"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <h2>💃 อยากทำอะไรกัน?</h2>
+    <p id="activitySubtitle">บอกหน่อยนะว่าอยากทำอะไรในเดตนี้</p>
+    <div class="choice-grid" id="activityGrid"></div>
+    <button class="btn btn-primary" id="btnNextActivity" onclick="nextFromActivity()" style="opacity:0.4;pointer-events:none">ถัดไป →</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 5: Choose Date ===== -->
+<div class="screen" id="screen-date">
+  <div class="card">
+    <div class="progress">
+      <div class="dot done"></div><div class="dot done"></div>
+      <div class="dot done"></div><div class="dot done"></div><div class="dot"></div>
+    </div>
+    <h2>📅 เลือกวันนัด</h2>
+    <p>อยากไปวันไหนกัน?</p>
+    <p class="label">วันที่นัด</p>
+    <input type="date" id="dateInput" onchange="checkDate()">
+    <p class="label">ช่วงเวลา</p>
+    <select id="timeSelect" onchange="checkDate()">
+      <option value="">-- เลือกช่วงเวลา --</option>
+      <option value="ตอนเช้า ☀️">ตอนเช้า ☀️</option>
+      <option value="ตอนบ่าย 🌤️">ตอนบ่าย 🌤️</option>
+      <option value="ตอนเย็น 🌆">ตอนเย็น 🌆</option>
+      <option value="ตอนกลางคืน 🌙">ตอนกลางคืน 🌙</option>
+    </select>
+    <button class="btn btn-love" id="btnConfirmDate" onclick="confirmDate()" style="opacity:0.4;pointer-events:none;width:100%">✅ ยืนยันนัดหมาย</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN FINAL ===== -->
+<div class="screen" id="screen-final">
+  <div class="card" style="max-width:520px">
+    <span style="font-size:64px;display:block;margin-bottom:16px;animation:pulse 1.5s infinite">🎉</span>
+    <div class="final-msg">นัดหมายเสร็จแล้ว!</div>
+
+    <div class="summary-box" id="summaryBox"></div>
+
+    <p class="note-warn">💛 หวังว่าจะไม่กดไม่รักนะ...</p>
+    <p style="font-size:0.9rem;opacity:0.5;margin-top:8px">รอวันนั้นด้วยใจจดจ่อเลยนะ 🌹</p>
+
+    <button class="btn btn-outline" onclick="restart()" style="margin-top:12px">🔁 เริ่มใหม่</button>
+  </div>
+</div>
+
+<script>
+  const state = { place: '', activity: '', date: '', time: '' };
+
+  /* ---- Stars ---- */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*3+2).toFixed(1)}s;animation-delay:${(Math.random()*4).toFixed(1)}s`;
+    starsEl.appendChild(s);
+  }
+
+  /* ---- Floating hearts ---- */
+  const hc = document.getElementById('heartsContainer');
+  ['❤️','🩷','💕','💖','💗','💓','🌹','✨'].forEach((h, i) => {
+    const el = document.createElement('div');
+    el.className = 'heart-float';
+    el.textContent = h;
+    el.style.cssText = `--s:${Math.random()*20+16}px;--d:${(Math.random()*10+8).toFixed(1)}s;--x:${Math.random()*95}%;--delay:${(Math.random()*8).toFixed(1)}s`;
+    hc.appendChild(el);
+  });
+
+  /* ---- Screen nav ---- */
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  /* ---- No button run away ---- */
+  let noClicks = 0;
+  function runAway(btn) {
+    noClicks++;
+    if (noClicks >= 4) { showScreen('screen-notlove'); return; }
+    const msgs = ['ยังไม่แน่ใจ?','ลองคิดดูอีกทีนะ','หรือจริง ๆ ก็รักอยู่?'];
+    btn.textContent = msgs[noClicks - 1] || '💔 ไม่รัก';
+    // random position
+    const maxX = window.innerWidth - btn.offsetWidth - 20;
+    const maxY = window.innerHeight - btn.offsetHeight - 20;
+    btn.style.position = 'fixed';
+    btn.style.left = Math.random() * maxX + 'px';
+    btn.style.top  = Math.random() * maxY + 'px';
+    btn.style.zIndex = 999;
+    btn.style.transition = 'left 0.2s, top 0.2s';
+  }
+
+  /* ---- Choice selection ---- */
+  function selectChoice(type, el, value) {
+    const grid = el.closest('.choice-grid');
+    grid.querySelectorAll('.choice-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    state[type] = value;
+    // enable next button
+    const btnId = type === 'place' ? 'btnNextPlace' : 'btnNextActivity';
+    const btn = document.getElementById(btnId);
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+
+  function nextFromPlace() {
+    if (!state.place) return;
+    showScreen('screen-activity');
+  }
+  function nextFromActivity() {
+    if (!state.activity) return;
+    showScreen('screen-date');
+  }
+
+    /* ---- Activities by place ---- */
+  const activities = {
+    'ร้านอาหารโรแมนติก 🍷': [
+      { emoji:'🍝', text:'กินดินเนอร์ใต้แสงเทียน' },
+      { emoji:'🍰', text:'แชร์ของหวานกัน' },
+      { emoji:'📸', text:'ถ่ายรูปคู่สุดหวาน' },
+      { emoji:'🎶', text:'ฟังเพลงชิล ๆ' }
+    ],
+    'คาเฟ่น่ารัก ☕': [
+      { emoji:'☕', text:'นั่งคุยกันยาว ๆ' },
+      { emoji:'🍰', text:'กินเค้กอร่อย ๆ' },
+      { emoji:'📷', text:'ถ่ายรูปคู่' },
+      { emoji:'🎨', text:'วาดรูปเล่นด้วยกัน' }
+    ],
+    'สวนสาธารณะ 🌸': [
+      { emoji:'🚶', text:'เดินเล่นด้วยกัน' },
+      { emoji:'🧺', text:'ปิกนิกใต้ต้นไม้' },
+      { emoji:'🌅', text:'ดูพระอาทิตย์ตก' },
+      { emoji:'📸', text:'ถ่ายรูปวิวสวย ๆ' }
+    ],
+    'ร้านหมูกระทะ 🍖': [
+      { emoji:'🥩', text:'ปิ้งหมูให้กัน' },
+      { emoji:'😂', text:'แข่งกินกัน' },
+      { emoji:'🧋', text:'กินของหวานต่อ' },
+      { emoji:'📸', text:'ถ่ายรูปโต๊ะอาหาร' }
+    ],
+    'ดูหนังในโรงภาพยนตร์ 🎬': [
+      { emoji:'🍿', text:'กินป๊อปคอร์นด้วยกัน' },
+      { emoji:'🎥', text:'ดูหนังโรแมนติก' },
+      { emoji:'🤝', text:'จับมือกันตอนดูหนัง' },
+      { emoji:'📸', text:'ถ่ายรูปหน้าโรงหนัง' }
+    ],
+    'ตลาดนัดยามค่ำ 🏮': [
+      { emoji:'🍢', text:'เดินกินของอร่อย' },
+      { emoji:'🛍️', text:'ซื้อของให้กัน' },
+      { emoji:'🎡', text:'เล่นเกมงานวัด' },
+      { emoji:'🌃', text:'เดินชมไฟกลางคืน' }
+    ]
+  };
+
+  function nextFromPlace() {
+    if (!state.place) return;
+
+    const grid = document.getElementById('activityGrid');
+    grid.innerHTML = '';
+
+    activities[state.place].forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'choice-item';
+      div.innerHTML = `
+        <span class="emoji">${item.emoji}</span>
+        ${item.text}
+      `;
+      div.onclick = () => selectChoice('activity', div, item.text);
+      grid.appendChild(div);
+    });
+
+    document.getElementById('activitySubtitle').innerHTML =
+      `เดตที่ <strong style="color:#ffb3de">${state.place}</strong><br>อยากทำอะไรกันดี?`;
+
+    showScreen('screen-activity');
+  }
+
+  /* ---- Date check ---- */
+  function checkDate() {
+    const d = document.getElementById('dateInput').value;
+    const t = document.getElementById('timeSelect').value;
+    const btn = document.getElementById('btnConfirmDate');
+    if (d && t) {
+      state.date = d;
+      state.time = t;
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    } else {
+      btn.style.opacity = '0.4';
+      btn.style.pointerEvents = 'none';
+    }
+  }
+
+  function confirmDate() {
+    buildSummary();
+    showScreen('screen-final');
+    launchConfetti();
+  }
+
+  /* ---- Summary ---- */
+  function buildSummary() {
+    const d = new Date(state.date);
+    const dayNames = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+    const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    const dateStr = `วัน${dayNames[d.getDay()]}ที่ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
+
+    document.getElementById('summaryBox').innerHTML = `
+      <div class="summary-row"><span>📍 สถานที่</span><span>${state.place}</span></div>
+      <div class="summary-row"><span>🎯 กิจกรรม</span><span>${state.activity}</span></div>
+      <div class="summary-row"><span>📅 วันนัด</span><span>${dateStr}</span></div>
+      <div class="summary-row"><span>🕐 เวลา</span><span>${state.time}</span></div>
+    `;
+  }
+
+  /* ---- Confetti ---- */
+  function launchConfetti() {
+    const colors = ['#ff6eb4','#e040fb','#ffb347','#a78bfa','#ff9de2','#7ee8a2'];
+    for (let i = 0; i < 80; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.cssText = `
+        left:${Math.random()*100}vw;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        width:${Math.random()*10+6}px;
+        height:${Math.random()*10+6}px;
+        border-radius:${Math.random()>0.5?'50%':'3px'};
+        animation-duration:${(Math.random()*2+2).toFixed(1)}s;
+        animation-delay:${(Math.random()*1).toFixed(2)}s;
+      `;
+      document.body.appendChild(c);
+      c.addEventListener('animationend', () => c.remove());
+    }
+  }
+
+  /* ---- Restart ---- */
+  function restart() {
+    noClicks = 0;
+    const btn = document.getElementById('btnNo');
+    btn.textContent = '💔 ไม่รัก';
+    btn.style.position = '';
+    btn.style.left = '';
+    btn.style.top = '';
+    state.place = state.activity = state.date = state.time = '';
+    document.querySelectorAll('.choice-item').forEach(i => i.classList.remove('selected'));
+    ['btnNextPlace','btnNextActivity'].forEach(id => {
+      document.getElementById(id).style.opacity = '0.4';
+      document.getElementById(id).style.pointerEvents = 'none';
+    });
+    document.getElementById('btnConfirmDate').style.opacity = '0.4';
+    document.getElementById('btnConfirmDate').style.pointerEvents = 'none';
+    document.getElementById('dateInput').value = '';
+    document.getElementById('timeSelect').value = '';
+    showScreen('screen-confession');
+  }
+</script>
+</body>
+</html>
