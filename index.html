@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💌 บอกรัก</title>
+<title>💌 ความลับ</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -302,14 +302,14 @@
     <span class="big-heart">💌</span>
     <h1>มีบางอย่างอยากบอก...</h1>
     <p>
-      เธอรู้มั้ยว่าทุกครั้งที่เห็นยิ้มของเธอ<br>
-      ฉันรู้สึกว่าโลกนี้มันดีขึ้นทันทีเลย<br><br>
-      <strong style="color:#ffb3de">ฉันรักเธอ</strong> &mdash; ด้วยหัวใจทั้งหมด 🤍
+      หนูรู้มั้ยว่าทุกครั้งที่เห็นยิ้มของหนู<br>
+      พี่รู้สึกว่าโลกนี้มันดีขึ้นทันทีเลย<br><br>
+      <strong style="color:#ffb3de">พี่ชอบหนู</strong> &mdash; ด้วยหัวใจทั้งหมด 🤍
     </p>
-    <p style="margin-bottom:32px">แล้วเธอล่ะ... รู้สึกยังไงกับฉันบ้าง?</p>
+    <p style="margin-bottom:32px">แล้วหนูล่ะ... รู้สึกยังไงกับฉันบ้าง?</p>
     <div>
-      <button class="btn btn-yes" onclick="showScreen('screen-yes')">❤️ รักเหมือนกัน!</button>
-      <button class="btn btn-no" id="btnNo" onclick="runAway(this)">💔 ไม่รัก</button>
+      <button class="btn btn-yes" onclick="showScreen('screen-yes')">❤️ ชอบเหมือนกัน!</button>
+      <button class="btn btn-no" id="btnNo" onclick="runAway(this)">💔 ไม่ชอบ</button>
     </div>
   </div>
 </div>
@@ -319,7 +319,7 @@
   <div class="card">
     <span class="big-heart">🥰</span>
     <h1>ดีใจมากเลย!</h1>
-    <p>เย้~ เธอรักฉันด้วย! ฉันดีใจมากเลยนะ 🌸<br>งั้นเราไปเดตกันได้เลย!</p>
+    <p>เย้~ หนูชอบพี่ด้วย! ดีใจมากเลยนะ 🌸<br>งั้นเราไปเดตกันได้เลย!</p>
     <button class="btn btn-love" onclick="showScreen('screen-place')">✨ นัดเดตกันเถอะ!</button>
   </div>
 </div>
@@ -328,8 +328,8 @@
 <div class="screen" id="screen-notlove">
   <div class="card">
     <span class="big-heart">😢</span>
-    <h2>โอเค... ฉันเข้าใจ</h2>
-    <p>แม้เธอจะไม่รัก แต่ฉันก็ยังอยากให้เธอมีความสุขนะ 💛<br>ขอบคุณที่ตอบตรง ๆ</p>
+    <h2>โอเค... พี่เข้าใจ</h2>
+    <p>แม้เธอจะไม่ชอล แต่พี่ก็ยังอยากให้หนูมีความสุขนะ 💛<br>ขอบคุณที่ตอบตรง ๆ</p>
     <button class="btn btn-outline" onclick="showScreen('screen-confession')">← กลับไปลองใหม่</button>
   </div>
 </div>
@@ -612,7 +612,7 @@
   function restart() {
     noClicks = 0;
     const btn = document.getElementById('btnNo');
-    btn.textContent = '💔 ไม่รัก';
+    btn.textContent = '💔 ไม่ชอบ';
     btn.style.position = '';
     btn.style.left = '';
     btn.style.top = '';
