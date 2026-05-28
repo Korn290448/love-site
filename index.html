@@ -329,7 +329,7 @@
   <div class="card">
     <span class="big-heart">😢</span>
     <h2>โอเค... พี่เข้าใจ</h2>
-    <p>แม้เธอจะไม่ชอล แต่พี่ก็ยังอยากให้หนูมีความสุขนะ 💛<br>ขอบคุณที่ตอบตรง ๆ</p>
+    <p>แม้เธอจะไม่ชอบ แต่พี่ก็ยังอยากให้หนูมีความสุขนะ 💛<br>ขอบคุณที่ตอบตรง ๆ</p>
     <button class="btn btn-outline" onclick="showScreen('screen-confession')">← กลับไปลองใหม่</button>
   </div>
 </div>
@@ -412,7 +412,7 @@
 
     <div class="summary-box" id="summaryBox"></div>
 
-    <p class="note-warn">💛 หวังว่าจะไม่กดไม่รักนะ...</p>
+    <p class="note-warn">💛 หวังว่าจะไม่กดไม่ชอบนะ...</p>
     <p style="font-size:0.9rem;opacity:0.5;margin-top:8px">รอวันนั้นด้วยใจจดจ่อเลยนะ 🌹</p>
 
     <button class="btn btn-outline" onclick="restart()" style="margin-top:12px">🔁 เริ่มใหม่</button>
@@ -454,8 +454,8 @@
   function runAway(btn) {
     noClicks++;
     if (noClicks >= 4) { showScreen('screen-notlove'); return; }
-    const msgs = ['ยังไม่แน่ใจ?','ลองคิดดูอีกทีนะ','หรือจริง ๆ ก็รักอยู่?'];
-    btn.textContent = msgs[noClicks - 1] || '💔 ไม่รัก';
+    const msgs = ['ยังไม่แน่ใจ?','ลองคิดดูอีกทีนะ','หรือจริง ๆ ก็ชอบอยู่?'];
+    btn.textContent = msgs[noClicks - 1] || '💔 ไม่ชอบ';
     // random position
     const maxX = window.innerWidth - btn.offsetWidth - 20;
     const maxY = window.innerHeight - btn.offsetHeight - 20;
